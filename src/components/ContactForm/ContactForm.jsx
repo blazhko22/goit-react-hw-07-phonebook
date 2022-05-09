@@ -1,17 +1,16 @@
-import { addContact } from '../../redux/actions';
-import { getItems } from '../../redux/selectors';
 import PropTypes from 'prop-types';
+import { toast } from 'react-toastify';
 
 import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useCreateContactMutation, useGetContactsQuery } from '../../redux/contactsSlice';
 
 import s from './ContactForm.module.css';
 
 export default function ContactForm() {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
-  const contacts = useSelector(getItems);
-  const dispatch = useDispatch();
+  const { data } = useGetContactsQuery();
+  const [addContact] = useCreateContactMutation();
 
   const onChengeValue = e => {
     const { name, value } = e.currentTarget;
@@ -30,11 +29,18 @@ export default function ContactForm() {
   const handleSubmit = e => {
     e.preventDefault();
 
-    if (contacts.some(contact => contact.name === name)) return alert(`${name} is already in contacts`);
+    const searchContact = data.some(contact => {
+      return contact.name.toLowerCase().includes(name.toLowerCase());
+    });
+    if (searchContact) {
+      toast.error(`${name} is alredy in contacts!!!`);
+      return;
+    }
 
-    dispatch(addContact(name, number));
-
-    e.currentTarget.reset();
+    addContact({ name, number });
+    toast.success(`${name} has added to contacts list`);
+    setName('');
+    setNumber('');
   };
 
   return (

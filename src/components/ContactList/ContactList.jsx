@@ -1,30 +1,27 @@
 import Filter from '../Filter';
 import ContactsItem from '../ContactsItem';
 
-import { getItems, getFilter } from '../../redux/selectors';
+import { useGetContactsQuery } from '../../redux/contactsSlice';
 
 import { useSelector } from 'react-redux';
 import s from "./ContactList.module.css";
 
 function ContactList() {
-  const contacts = useSelector(getItems);
-  const filter = useSelector(getFilter);
+  const { data } = useGetContactsQuery();
+  const filter = useSelector(state => state.filter.value);
 
-  const filterVisibleContacts = () => {
-    const normalizeFilter = filter.toLowerCase().trim();
-
-    return contacts.filter(contact => contact.name.toLowerCase().includes(normalizeFilter));
-  };
-
-  const filteredContacts = filterVisibleContacts(contacts).reverse();
+  const filterVisibleContacts = data?.filter(({ name }) =>
+  name.toLowerCase().includes(filter.toLowerCase())
+);
 
   return (
     <div>
       <Filter />
       <ul className={s.list}>
-        {filteredContacts.map(({ id, name, number }) => (
-          <ContactsItem key={id} name={name} number={number} />
-        ))}
+      {filterVisibleContacts &&
+        filterVisibleContacts.map(contact => {
+          return <ContactsItem key={contact.id} contact={contact}></ContactsItem>;
+        })}
       </ul>
     </div>
   );

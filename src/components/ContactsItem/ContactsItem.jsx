@@ -1,16 +1,23 @@
 import PropTypes from 'prop-types';
-import { useDispatch } from 'react-redux';
-import { removeContact } from '../../redux/actions';
+import { useDeleteContactMutation } from '../../redux/contactsSlice';
+import { toast } from 'react-toastify';
+
+
 import s from './ContactsItem.module.css';
 
-function ContactsItem({ name, number }) {
-  const dispatch = useDispatch();
-  const deleteContact = e => dispatch(removeContact(e.currentTarget.parentNode.childNodes[0].data));
+function ContactsItem({ contact }) {
+  const { id, name, number } = contact;
+  const [deleteContact] = useDeleteContactMutation();
+
+  const handleDeleteContact = () => {
+    deleteContact(id);
+    toast.success(`Contact ${name} successfully deleted!`);
+  };
 
   return (
     <li className={s.item}>
       {name}: {number}
-      <button className={s.button} type="button" onClick={deleteContact}>
+      <button className={s.button} type="button" onClick={handleDeleteContact}>
         remove
       </button>
     </li>
@@ -20,6 +27,9 @@ function ContactsItem({ name, number }) {
 export default ContactsItem;
 
 ContactsItem.propTypes = {
-  name: PropTypes.string,
-  number: PropTypes.string,
+  contact: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    phone: PropTypes.string.isRequired,
+  }).isRequired,
 };

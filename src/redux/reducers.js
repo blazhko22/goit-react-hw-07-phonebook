@@ -1,16 +1,16 @@
-import { combineReducers, createReducer } from '@reduxjs/toolkit';
-import { addContact, removeContact, changeFilter } from './actions';
+import { createSlice } from '@reduxjs/toolkit';
 
-const items = createReducer([], {
-  [addContact.type]: (state, { payload }) => [...state, payload],
-  [removeContact.type]: (state, { payload }) => state.filter(el => el.name !== payload),
+const filterSlice = createSlice({
+  name: 'filter',
+  initialState: {
+    value: '',
+  },
+  reducers: {
+    changeFilter: (state, action) => {
+      state.value = action.payload;
+    },
+  },
 });
 
-const filter = createReducer('', {
-  [changeFilter.type]: (_, { payload }) => payload,
-});
-
-export default combineReducers({
-  items,
-  filter,
-});
+export const { changeFilter } = filterSlice.actions;
+export default filterSlice.reducer;
