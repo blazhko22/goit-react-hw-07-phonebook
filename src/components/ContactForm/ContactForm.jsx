@@ -41,6 +41,7 @@ export default function ContactForm() {
     toast.success(`${name} has added to contacts list`);
     setName('');
     setNumber('');
+    e.currentTarget.reset();
   };
 
   return (
