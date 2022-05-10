@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import s from './ContactsItem.module.css';
 
 function ContactsItem({ contact }) {
-  const { id, name, number } = contact;
+  const { id, name, phone } = contact;
   const [deleteContact] = useDeleteContactMutation();
 
   const handleDeleteContact = () => {
@@ -16,7 +16,7 @@ function ContactsItem({ contact }) {
 
   return (
     <li className={s.item}>
-      {name}: {number}
+      {name}: {phone}
       <button className={s.button} type="button" onClick={handleDeleteContact}>
         remove
       </button>
