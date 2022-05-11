@@ -17,6 +17,7 @@
     "react-scripts": "5.0.0",
     "react-toastify": "^9.0.1",
     "redux-persist": "^6.0.0",
+    "shortid": "^2.2.16",
     "use-debounce": "^8.0.1",
     "web-vitals": "^2.1.3"
   },
