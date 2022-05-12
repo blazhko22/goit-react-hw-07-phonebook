@@ -1,18 +1,20 @@
-import { useDispatch } from 'react-redux';
-import { useDebouncedCallback } from 'use-debounce';
-import { changeFilter } from '../../redux/reducers';
+import { useSelector, useDispatch } from 'react-redux';
+import { contactSelectors, changeFilter } from '../../redux/contact';
 import s from './Filter.module.css';
 
 function Filter() {
   const dispatch = useDispatch();
-  const setFilter = useDebouncedCallback(value => {
-    dispatch(changeFilter(value));
-  }, 500);
+
+  const value = useSelector(contactSelectors.getFilter);
 
   return (
     <label className={s.label}>
       Find contacts by name
-      <input type="text" name="filter" onChange={e => setFilter(e.target.value)} />
+      <input 
+        type="text" 
+        name="filter" 
+        value={value}
+        onChange={e => dispatch(changeFilter(e.target.value))} />
     </label>
   );
 }

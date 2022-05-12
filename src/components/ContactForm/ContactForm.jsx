@@ -1,8 +1,9 @@
 import PropTypes from 'prop-types';
 
+import { useSelector, useDispatch } from 'react-redux';
 import { useState } from 'react';
-import { useCreateContactMutation } from '../../redux/contactsSlice';
 
+import { contactOperations, contactSelectors } from '../../redux/contact';
 import s from './ContactForm.module.css';
 
 const shortid = require('shortid');
@@ -12,7 +13,8 @@ const numberInputId = shortid.generate();
 export default function ContactForm() {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
-  const [addContact] = useCreateContactMutation();
+  const contacts = useSelector(contactSelectors.getContacts);
+  const dispatch = useDispatch();
 
   const handleChangeName = e => {
     setName(e.currentTarget.value);
@@ -25,7 +27,14 @@ export default function ContactForm() {
   const handleSubmit = e => {
     e.preventDefault();
 
-    addContact({name, phone: number,})
+    if (
+      contacts.find(
+        contact => contact.name.toLowerCase() === name.toLowerCase(),
+      )
+    ) {
+      return alert(`${name} is already in contacts`);
+    }
+    dispatch(contactOperations.addContact(name, number));
     setName('');
     setNumber('');
 

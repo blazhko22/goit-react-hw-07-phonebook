@@ -1,23 +1,24 @@
 import PropTypes from 'prop-types';
-import { useDeleteContactMutation } from '../../redux/contactsSlice';
-import { toast } from 'react-toastify';
-
+// import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { contactOperations } from '../../redux/contact';
 
 import s from './ContactsItem.module.css';
 
-function ContactsItem({ contact }) {
+function ContactsItem({contact}) {
   const { id, name, phone } = contact;
-  const [deleteContact] = useDeleteContactMutation();
-
-  const handleDeleteContact = () => {
-    deleteContact(id);
-    toast.success(`Contact ${name} successfully deleted!`);
-  };
+    
+  const dispatch = useDispatch();
+  const handleDeleteContact = id => dispatch(contactOperations.deleteContact(id));
 
   return (
-    <li className={s.item}>
+    <li className={s.item} key={id}>
       {name}: {phone}
-      <button className={s.button} type="button" onClick={handleDeleteContact}>
+      <button 
+        className={s.button} 
+        type="button" 
+        onClick={() => handleDeleteContact(id)}
+      >
         remove
       </button>
     </li>
